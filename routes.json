@@ -1,0 +1,5 @@
+{
+  "/api/auth/*": "/auth/$1",
+  "/api/wallet/*": "/wallet/$1",
+  "/api/listings/*/unlock": "/listings/$1/unlock"
+}
