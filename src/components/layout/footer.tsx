@@ -57,10 +57,7 @@ export function Footer() {
               About DGT
             </h3>
             <p className="text-xs md:text-sm text-gray-300 leading-relaxed">
-              DamageThings.com (DGT) is an Indian online marketplace for buying and selling damaged, used, and repairable goods. Our platform promotes trust through token-based contact unlocks, verified listings, and a transparent buyer-seller ecosystem.
-            </p>
-            <p className="text-xs text-gray-400 italic mt-2">
-              Registered by: Sheddy Smith Lab
+              India's first token-based marketplace for damaged, used, and repairable items. Connect with genuine buyers and sellers securely.
             </p>
           </div>
 
@@ -168,7 +165,7 @@ export function Footer() {
 
         {/* Newsletter Section */}
         <div className="mb-6 md:mb-8">
-          <div className="bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-lg p-4 md:p-6 border border-gray-700">
+          <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-lg p-4 md:p-6 border border-gray-700">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
               <div className="text-center lg:text-left">
                 <h4 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">
@@ -187,9 +184,9 @@ export function Footer() {
                   className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 w-full lg:w-64 h-10 text-sm"
                   required
                 />
-                <Button
-                  type="submit"
-                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 h-10 px-4 text-sm font-medium transition-all duration-300 transform hover:scale-105"
+                <Button 
+                  type="submit" 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10 px-4 text-sm font-medium transition-all duration-300 transform hover:scale-105"
                 >
                   Subscribe
                 </Button>
@@ -210,75 +207,26 @@ export function Footer() {
               <Mail className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-xs md:text-sm font-medium text-white">Email Support</p>
-              <p className="text-xs md:text-sm text-gray-400">Support@DamageThings.com</p>
+              <p className="text-xs md:text-sm font-medium text-white">Email</p>
+              <p className="text-xs md:text-sm text-gray-400">support@damagthings.com</p>
             </div>
           </div>
           <div className="flex items-center gap-3 text-gray-300">
-            <div className="bg-green-600/20 p-2 rounded-lg">
-              <Phone className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
+            <div className="bg-purple-600/20 p-2 rounded-lg">
+              <Phone className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
             </div>
             <div>
-              <p className="text-xs md:text-sm font-medium text-white">Customer Support</p>
-              <p className="text-xs md:text-sm text-gray-400">+91 7447 000 198</p>
+              <p className="text-xs md:text-sm font-medium text-white">Phone</p>
+              <p className="text-xs md:text-sm text-gray-400">+91 98765 43210</p>
             </div>
           </div>
           <div className="flex items-center gap-3 text-gray-300">
-            <div className="bg-orange-600/20 p-2 rounded-lg">
-              <MapPin className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />
+            <div className="bg-pink-600/20 p-2 rounded-lg">
+              <MapPin className="w-4 h-4 md:w-5 md:h-5 text-pink-400" />
             </div>
             <div>
               <p className="text-xs md:text-sm font-medium text-white">Address</p>
-              <p className="text-xs md:text-sm text-gray-400">Indore, Madhya Pradesh</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Company Details */}
-        <div className="bg-gray-800/50 rounded-lg p-4 md:p-6 mb-6 border border-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs md:text-sm">
-            <div>
-              <p className="text-gray-400 mb-1">
-                <span className="text-white font-semibold">Company:</span> DamageThings.com (DGT)
-              </p>
-              <p className="text-gray-400 mb-1">
-                <span className="text-white font-semibold">Operated by:</span> Sheddy Smith Lab
-              </p>
-              <p className="text-gray-400">
-                <span className="text-white font-semibold">Established:</span> 2025
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400 mb-1">
-                <span className="text-white font-semibold">Full Address:</span>
-              </p>
-              <p className="text-gray-300">
-                MalwaTrolley, 122/1, AB Byepass Road,<br />
-                Indore – 452020, Madhya Pradesh, India
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400 mb-2">
-                <span className="text-white font-semibold">Customer Promise:</span>
-              </p>
-              <ul className="space-y-1 text-gray-300">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
-                  <span>100% Secure Payments via Razorpay</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
-                  <span>Verified Seller Listings</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
-                  <span>24×7 Support</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>
-                  <span>User Data Protection</span>
-                </li>
-              </ul>
+              <p className="text-xs md:text-sm text-gray-400">Delhi, India</p>
             </div>
           </div>
         </div>
@@ -287,10 +235,10 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-700">
           <div className="text-center md:text-left">
             <p className="text-xs md:text-sm text-gray-400">
-              © {new Date().getFullYear()} DamageThings.com — All Rights Reserved.
+              © {new Date().getFullYear()} DamagThings. All rights reserved.
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              Headquarters: Indore, Madhya Pradesh, India | Website: www.DamageThings.com
+              Made with ❤️ in India
             </p>
           </div>
           
