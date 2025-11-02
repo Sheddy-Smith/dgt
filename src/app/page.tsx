@@ -734,10 +734,11 @@ export default function HomePage() {
 
   // Modal functions
   const openListingModal = (listing: Listing) => {
-    // Navigate to listing detail page instead of opening modal
-    window.open(`/listing/${listing.id}`, '_blank')
+    setSelectedListing(listing)
+    setShowListingModal(true)
+    setCurrentImageIndex(0)
     // Increment view count
-    setListings(prev => prev.map(l => 
+    setListings(prev => prev.map(l =>
       l.id === listing.id ? { ...l, views: l.views + 1 } : l
     ))
   }
