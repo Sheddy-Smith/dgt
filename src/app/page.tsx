@@ -96,98 +96,94 @@ const mockCategories: Category[] = [
 const mockListings: Listing[] = [
   {
     id: '1',
-    title: 'Royal Enfield Classic 350 2022',
-    price: 145000,
+    title: 'Damaged iPhone 13 Pro - Cracked Screen',
+    price: 28000,
     location: 'Vijay Nagar',
     city: 'Indore',
     posted_at: '2 hours ago',
     images: [
-      'https://images.unsplash.com/photo-1558980664-1e5d2d43b42d?w=600&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1558980664-1e5d2d43b42d?w=600&h=400&fit=crop&auto=format&h=600',
-      'https://images.unsplash.com/photo-1558980664-1e5d2d43b42d?w=600&h=400&fit=crop&auto=format&w=600',
-      'https://images.unsplash.com/photo-1558980664-1e5d2d43b42d?w=600&h=400&fit=crop&auto=format&q=80'
+      'https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/8000621/pexels-photo-8000621.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/7241413/pexels-photo-7241413.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
     ],
-    category: 'Bikes',
+    category: 'Mobiles',
     is_verified: true,
     is_featured: true,
     seller_name: 'Rahul Sharma',
     seller_type: 'individual',
     views: 234,
-    description: 'Well maintained bike, excellent condition with all documents clear. Single owner, insurance valid till 2025.'
+    description: 'iPhone 13 Pro 256GB with cracked screen. Everything else working perfectly. Touch responsive, Face ID works, battery health 89%. Easy repair - display replacement only.'
   },
   {
     id: '2',
-    title: 'iPhone 12 Pro 128GB',
-    price: 45000,
+    title: 'Damaged Car - Front Bumper Damage',
+    price: 185000,
     location: 'Palasia',
     city: 'Indore',
     posted_at: '5 hours ago',
     images: [
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=400&fit=crop&auto=format&h=600',
-      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=400&fit=crop&auto=format&w=600'
+      'https://images.pexels.com/photos/9834048/pexels-photo-9834048.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/10042666/pexels-photo-10042666.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/13861487/pexels-photo-13861487.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
     ],
-    category: 'Mobiles',
+    category: 'Cars',
     is_verified: false,
     is_featured: false,
-    seller_name: 'Tech Store',
+    seller_name: 'Auto World',
     seller_type: 'dealer',
     views: 567,
-    description: 'Like new condition with original accessories, box, and charger. Battery health 92%.'
+    description: 'Maruti Swift 2019 with front bumper damage from parking mishap. Engine perfect, all documents clear. AC, music system working. Minor repair needed.'
   },
   {
     id: '3',
-    title: 'Sofa Set 3+1+1',
-    price: 12000,
+    title: 'HP LaserJet Printer - Paper Jam Issue',
+    price: 3500,
     location: 'Bhawarkua',
     city: 'Indore',
     posted_at: '1 day ago',
     images: [
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&auto=format&h=600',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&auto=format&w=600',
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&auto=format&q=80'
+      'https://images.pexels.com/photos/4622188/pexels-photo-4622188.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/5668838/pexels-photo-5668838.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/4621967/pexels-photo-4621967.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
     ],
-    category: 'Furniture',
+    category: 'Electronics',
     is_verified: true,
     is_featured: false,
-    seller_name: 'Furniture House',
+    seller_name: 'Office Solutions',
     seller_type: 'dealer',
     views: 123,
-    description: 'Premium quality sofa set, barely used. Original price ₹35,000. Selling due to relocation.'
+    description: 'HP LaserJet Pro M402dn - Has recurring paper jam issue. Prints fine when it works. Sold as-is for parts or repair. Network printing functional.'
   },
   {
     id: '4',
-    title: 'Honda City VX 2018',
-    price: 625000,
+    title: 'Damaged Laptop - Screen Hinge Broken',
+    price: 15000,
     location: 'Sapna Sangeeta',
     city: 'Indore',
     posted_at: '3 days ago',
     images: [
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop&auto=format&h=600',
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop&auto=format&w=600',
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop&auto=format&q=80',
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=400&fit=crop&auto=format&fit=crop'
+      'https://images.pexels.com/photos/7339012/pexels-photo-7339012.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/5238645/pexels-photo-5238645.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/4195504/pexels-photo-4195504.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
     ],
-    category: 'Cars',
+    category: 'Electronics',
     is_verified: true,
     is_featured: true,
-    seller_name: 'Auto World',
+    seller_name: 'Tech Repairs',
     seller_type: 'dealer',
     views: 890,
-    description: 'Single owner, excellent mileage, comprehensive insurance, all service records available.'
+    description: 'Dell Inspiron 15 (2020) - Broken screen hinge. Display works perfectly with external monitor. Core i5, 8GB RAM, 256GB SSD. Great for desktop replacement or repair.'
   },
   {
     id: '5',
-    title: 'Samsung 43" Smart TV',
-    price: 28000,
+    title: 'Water Damaged Washing Machine',
+    price: 4500,
     location: 'Annapurna',
     city: 'Indore',
     posted_at: '1 week ago',
     images: [
-      'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600&h=400&fit=crop&auto=format&h=600'
+      'https://images.pexels.com/photos/5591663/pexels-photo-5591663.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
     ],
     category: 'Electronics',
     is_verified: false,
@@ -195,7 +191,65 @@ const mockListings: Listing[] = [
     seller_name: 'Priya Patel',
     seller_type: 'individual',
     views: 45,
-    description: '4K Smart TV with remote and warranty. 2 years old, excellent condition.'
+    description: 'LG 6.5kg fully automatic washing machine. Water leaked from bottom during last use. Drum and motor seem fine. Selling for parts or repair.'
+  },
+  {
+    id: '6',
+    title: 'Damaged Refrigerator - Cooling Issue',
+    price: 5800,
+    location: 'Vijay Nagar',
+    city: 'Indore',
+    posted_at: '2 days ago',
+    images: [
+      'https://images.pexels.com/photos/2343467/pexels-photo-2343467.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/4113703/pexels-photo-4113703.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
+    ],
+    category: 'Electronics',
+    is_verified: true,
+    is_featured: false,
+    seller_name: 'Appliance Hub',
+    seller_type: 'dealer',
+    views: 178,
+    description: 'Samsung 265L double door fridge. Compressor runs but not cooling properly. Gas refill or compressor replacement may fix it. Body in good condition.'
+  },
+  {
+    id: '7',
+    title: 'Accident Damaged Motorcycle - Salvage',
+    price: 22000,
+    location: 'Rau',
+    city: 'Indore',
+    posted_at: '4 days ago',
+    images: [
+      'https://images.pexels.com/photos/4488662/pexels-photo-4488662.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/13861669/pexels-photo-13861669.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/7675408/pexels-photo-7675408.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
+    ],
+    category: 'Bikes',
+    is_verified: true,
+    is_featured: true,
+    seller_name: 'Bike Salvage',
+    seller_type: 'dealer',
+    views: 456,
+    description: 'Bajaj Pulsar 220F accident damaged. Engine and gearbox intact and working. Frame bent, fuel tank dented. Good for parts or restoration project.'
+  },
+  {
+    id: '8',
+    title: 'Broken Gaming Console - PS4 HDMI Port',
+    price: 8500,
+    location: 'Palasia',
+    city: 'Indore',
+    posted_at: '3 hours ago',
+    images: [
+      'https://images.pexels.com/photos/3945683/pexels-photo-3945683.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
+      'https://images.pexels.com/photos/4219861/pexels-photo-4219861.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'
+    ],
+    category: 'Electronics',
+    is_verified: false,
+    is_featured: false,
+    seller_name: 'Gaming Store',
+    seller_type: 'dealer',
+    views: 289,
+    description: 'PlayStation 4 500GB with damaged HDMI port. Powers on, all functions work. HDMI port repair needed for display output. 2 controllers included.'
   }
 ]
 
@@ -211,18 +265,18 @@ const mockLocations: Location[] = [
 ]
 
 const mockSearchSuggestions: SearchSuggestion[] = [
-  { id: '1', text: 'Royal Enfield', type: 'category', category: 'Bikes', count: 234 },
-  { id: '2', text: 'iPhone', type: 'category', category: 'Mobiles', count: 567 },
-  { id: '3', text: 'Sofa Set', type: 'category', category: 'Furniture', count: 123 },
-  { id: '4', text: 'Honda City', type: 'category', category: 'Cars', count: 89 },
+  { id: '1', text: 'Damaged iPhone', type: 'category', category: 'Mobiles', count: 234 },
+  { id: '2', text: 'Cracked Screen Phone', type: 'category', category: 'Mobiles', count: 567 },
+  { id: '3', text: 'Broken Laptop', type: 'category', category: 'Electronics', count: 123 },
+  { id: '4', text: 'Accident Car', type: 'category', category: 'Cars', count: 89 },
   { id: '5', text: 'Indore', type: 'location', count: 1250 },
   { id: '6', text: 'Bhopal', type: 'location', count: 890 },
-  { id: '7', text: 'Used cars under 2 lakh', type: 'trending', count: 456 },
-  { id: '8', text: 'Second hand mobiles', type: 'trending', count: 789 },
-  { id: '9', text: 'Furniture for rent', type: 'trending', count: 234 },
-  { id: '10', text: 'Royal Enfield Classic 350', type: 'recent', count: 0 },
-  { id: '11', text: 'iPhone 12 Pro', type: 'recent', count: 0 },
-  { id: '12', text: 'Office chair', type: 'recent', count: 0 }
+  { id: '7', text: 'Water damaged electronics', type: 'trending', count: 456 },
+  { id: '8', text: 'Salvage bikes', type: 'trending', count: 789 },
+  { id: '9', text: 'Faulty appliances', type: 'trending', count: 234 },
+  { id: '10', text: 'Damaged printer', type: 'recent', count: 0 },
+  { id: '11', text: 'Broken refrigerator', type: 'recent', count: 0 },
+  { id: '12', text: 'Gaming console repair', type: 'recent', count: 0 }
 ]
 
 const mockTokenBundles: TokenBundle[] = [
