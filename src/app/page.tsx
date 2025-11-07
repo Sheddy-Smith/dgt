@@ -29,6 +29,8 @@ interface Listing {
   seller_type: 'individual' | 'dealer'
   views: number
   description?: string
+  listing_type: 'free' | 'token'
+  expires_at?: string
 }
 
 interface Category {
@@ -112,7 +114,9 @@ const mockListings: Listing[] = [
     seller_name: 'Rahul Sharma',
     seller_type: 'individual',
     views: 234,
-    description: 'iPhone 13 Pro 256GB with cracked screen. Everything else working perfectly. Touch responsive, Face ID works, battery health 89%. Easy repair - display replacement only.'
+    description: 'iPhone 13 Pro 256GB with cracked screen. Everything else working perfectly. Touch responsive, Face ID works, battery health 89%. Easy repair - display replacement only.',
+    listing_type: 'token',
+    expires_at: undefined
   },
   {
     id: '2',
@@ -132,7 +136,9 @@ const mockListings: Listing[] = [
     seller_name: 'Auto World',
     seller_type: 'dealer',
     views: 567,
-    description: 'Maruti Swift 2019 with front bumper damage from parking mishap. Engine perfect, all documents clear. AC, music system working. Minor repair needed.'
+    description: 'Maruti Swift 2019 with front bumper damage from parking mishap. Engine perfect, all documents clear. AC, music system working. Minor repair needed.',
+    listing_type: 'free',
+    expires_at: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     id: '3',
@@ -152,7 +158,9 @@ const mockListings: Listing[] = [
     seller_name: 'Office Solutions',
     seller_type: 'dealer',
     views: 123,
-    description: 'HP LaserJet Pro M402dn - Has recurring paper jam issue. Prints fine when it works. Sold as-is for parts or repair. Network printing functional.'
+    description: 'HP LaserJet Pro M402dn - Has recurring paper jam issue. Prints fine when it works. Sold as-is for parts or repair. Network printing functional.',
+    listing_type: 'token',
+    expires_at: undefined
   },
   {
     id: '4',
@@ -172,7 +180,9 @@ const mockListings: Listing[] = [
     seller_name: 'Tech Repairs',
     seller_type: 'dealer',
     views: 890,
-    description: 'Dell Inspiron 15 (2020) - Broken screen hinge. Display works perfectly with external monitor. Core i5, 8GB RAM, 256GB SSD. Great for desktop replacement or repair.'
+    description: 'Dell Inspiron 15 (2020) - Broken screen hinge. Display works perfectly with external monitor. Core i5, 8GB RAM, 256GB SSD. Great for desktop replacement or repair.',
+    listing_type: 'token',
+    expires_at: undefined
   },
   {
     id: '5',
@@ -191,7 +201,9 @@ const mockListings: Listing[] = [
     seller_name: 'Priya Patel',
     seller_type: 'individual',
     views: 45,
-    description: 'LG 6.5kg fully automatic washing machine. Water leaked from bottom during last use. Drum and motor seem fine. Selling for parts or repair.'
+    description: 'LG 6.5kg fully automatic washing machine. Water leaked from bottom during last use. Drum and motor seem fine. Selling for parts or repair.',
+    listing_type: 'free',
+    expires_at: new Date(Date.now() + 23 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     id: '6',
@@ -210,7 +222,9 @@ const mockListings: Listing[] = [
     seller_name: 'Appliance Hub',
     seller_type: 'dealer',
     views: 178,
-    description: 'Samsung 265L double door fridge. Compressor runs but not cooling properly. Gas refill or compressor replacement may fix it. Body in good condition.'
+    description: 'Samsung 265L double door fridge. Compressor runs but not cooling properly. Gas refill or compressor replacement may fix it. Body in good condition.',
+    listing_type: 'token',
+    expires_at: undefined
   },
   {
     id: '7',
@@ -230,7 +244,9 @@ const mockListings: Listing[] = [
     seller_name: 'Bike Salvage',
     seller_type: 'dealer',
     views: 456,
-    description: 'Bajaj Pulsar 220F accident damaged. Engine and gearbox intact and working. Frame bent, fuel tank dented. Good for parts or restoration project.'
+    description: 'Bajaj Pulsar 220F accident damaged. Engine and gearbox intact and working. Frame bent, fuel tank dented. Good for parts or restoration project.',
+    listing_type: 'token',
+    expires_at: undefined
   },
   {
     id: '8',
@@ -249,7 +265,9 @@ const mockListings: Listing[] = [
     seller_name: 'Gaming Store',
     seller_type: 'dealer',
     views: 289,
-    description: 'PlayStation 4 500GB with damaged HDMI port. Powers on, all functions work. HDMI port repair needed for display output. 2 controllers included.'
+    description: 'PlayStation 4 500GB with damaged HDMI port. Powers on, all functions work. HDMI port repair needed for display output. 2 controllers included.',
+    listing_type: 'free',
+    expires_at: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000).toISOString()
   }
 ]
 
@@ -771,6 +789,15 @@ export default function HomePage() {
     return postedAt
   }
 
+  const calculateDaysRemaining = (expiresAt?: string) => {
+    if (!expiresAt) return null
+    const now = new Date()
+    const expiry = new Date(expiresAt)
+    const diffTime = expiry.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays > 0 ? diffDays : 0
+  }
+
   // Image slider functions for cards
   const nextCardImage = (listingId: string, totalImages: number) => {
     setCardImageIndexes(prev => ({
@@ -1047,12 +1074,23 @@ export default function HomePage() {
             </div>
             
             {/* Badges */}
-            <div className="absolute top-2 left-2 flex gap-1">
-              {listing.is_featured && (
-                <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
-              )}
-              {listing.is_verified && (
-                <Badge className="bg-blue-500 text-white text-xs">Verified</Badge>
+            <div className="absolute top-2 left-2 flex flex-col gap-1">
+              <div className="flex gap-1">
+                {listing.is_featured && (
+                  <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
+                )}
+                {listing.listing_type === 'token' && (
+                  <Badge className="bg-green-500 text-white text-xs flex items-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    Token Verified
+                  </Badge>
+                )}
+              </div>
+              {listing.listing_type === 'free' && listing.expires_at && (
+                <Badge className="bg-orange-500 text-white text-xs flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Expires in {calculateDaysRemaining(listing.expires_at)} days
+                </Badge>
               )}
             </div>
             
@@ -1599,12 +1637,23 @@ export default function HomePage() {
                       </button>
                       
                       {/* Badges */}
-                      <div className="absolute top-2 left-2 flex gap-1">
-                        {listing.is_verified && (
-                          <Badge className="bg-blue-500 text-white text-xs">Verified</Badge>
-                        )}
-                        {listing.is_featured && (
-                          <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        <div className="flex gap-1">
+                          {listing.is_featured && (
+                            <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
+                          )}
+                          {listing.listing_type === 'token' && (
+                            <Badge className="bg-green-500 text-white text-xs flex items-center gap-1">
+                              <Lock className="w-3 h-3" />
+                              Token Verified
+                            </Badge>
+                          )}
+                        </div>
+                        {listing.listing_type === 'free' && listing.expires_at && (
+                          <Badge className="bg-orange-500 text-white text-xs flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            Expires in {calculateDaysRemaining(listing.expires_at)} days
+                          </Badge>
                         )}
                       </div>
                     </div>
@@ -1759,12 +1808,23 @@ export default function HomePage() {
                       </button>
                       
                       {/* Badges */}
-                      <div className="absolute top-2 left-2 flex gap-1">
-                        {listing.is_verified && (
-                          <Badge className="bg-blue-500 text-white text-xs">Verified</Badge>
-                        )}
-                        {listing.is_featured && (
-                          <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
+                      <div className="absolute top-2 left-2 flex flex-col gap-1">
+                        <div className="flex gap-1">
+                          {listing.is_featured && (
+                            <Badge className="bg-yellow-500 text-white text-xs">Featured</Badge>
+                          )}
+                          {listing.listing_type === 'token' && (
+                            <Badge className="bg-green-500 text-white text-xs flex items-center gap-1">
+                              <Lock className="w-3 h-3" />
+                              Token Verified
+                            </Badge>
+                          )}
+                        </div>
+                        {listing.listing_type === 'free' && listing.expires_at && (
+                          <Badge className="bg-orange-500 text-white text-xs flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            Expires in {calculateDaysRemaining(listing.expires_at)} days
+                          </Badge>
                         )}
                       </div>
                     </div>
@@ -2382,15 +2442,24 @@ export default function HomePage() {
                 <div className="space-y-6">
                   {/* Price and Badges */}
                   <div>
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <span className="text-3xl font-bold text-gray-900">
                         {formatPrice(selectedListing.price)}
                       </span>
                       {selectedListing.is_featured && (
                         <Badge className="bg-yellow-500 text-white">Featured</Badge>
                       )}
-                      {selectedListing.is_verified && (
-                        <Badge className="bg-blue-500 text-white">Verified</Badge>
+                      {selectedListing.listing_type === 'token' && (
+                        <Badge className="bg-green-500 text-white flex items-center gap-1">
+                          <Lock className="w-3 h-3" />
+                          Token Verified - No Expiry
+                        </Badge>
+                      )}
+                      {selectedListing.listing_type === 'free' && selectedListing.expires_at && (
+                        <Badge className="bg-orange-500 text-white flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          Expires in {calculateDaysRemaining(selectedListing.expires_at)} days
+                        </Badge>
                       )}
                     </div>
                     <div className="flex items-center text-sm text-gray-600">
