@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Search, MapPin, User, Menu, Heart, Star, Clock, Filter, ChevronDown, X, TrendingUp, Map, ChevronLeft, ChevronRight, Maximize2, Phone, MessageCircle, Share2, Calendar, Wallet, Coins, Lock, Unlock, Bell, Settings, Plus, Camera, Package, Tag, DollarSign, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -89,9 +90,9 @@ const mockCategories: Category[] = [
   { id: '3', name: 'Mobiles', icon: '📱', count: 2100 },
   { id: '4', name: 'Furniture', icon: '🛋️', count: 650 },
   { id: '5', name: 'Properties', icon: '🏠', count: 430 },
-  { id: '6', name: 'Jobs', icon: '💼', count: 320 },
-  { id: '7', name: 'Services', icon: '🔧', count: 180 },
-  { id: '8', name: 'Pets', icon: '🐕', count: 95 },
+  // { id: '6', name: 'Jobs', icon: '💼', count: 320 },
+  // { id: '7', name: 'Services', icon: '🔧', count: 180 },
+  // { id: '8', name: 'Pets', icon: '🐕', count: 95 },
   { id: '9', name: 'Fashion', icon: '👕', count: 780 }
 ]
 
@@ -304,7 +305,10 @@ const mockTokenBundles: TokenBundle[] = [
   { id: '4', name: 'Super Saver', price: 200, tokens: 20, freeTokens: 6, totalTokens: 26, isActive: true }
 ]
 
+import { getCurrentUser, onAuthChange, logout as authLogout } from '@/lib/auth'
+
 export default function HomePage() {
+  const router = useRouter()
   const [selectedLocation, setSelectedLocation] = useState<Location>(mockLocations[0])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
@@ -401,45 +405,27 @@ export default function HomePage() {
 
   // Check authentication status on mount
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch('/api/auth/me')
-        if (response.ok) {
-          const data = await response.json()
-          if (data.user) {
-            setCurrentUser(data.user)
-            // Load user wallet
-            const walletResponse = await fetch('/api/wallet')
-            if (walletResponse.ok) {
-              const walletData = await walletResponse.json()
-              setUserWallet(walletData.wallet)
-            }
-          }
-        }
-      } catch (error) {
-        console.log('Not authenticated')
-      }
-      
-      // Load token bundles
-      setTokenBundles(mockTokenBundles)
-      
-      // Load mock data for demo if not authenticated
-      if (!currentUser) {
-        const mockUser = { id: 'user1', mobile: '+919876543210', name: 'Demo User' }
-        setCurrentUser(mockUser)
-        
-        const mockWallet: UserWallet = {
-          id: 'wallet1',
-          userId: 'user1',
-          tokens: 5,
+    let unsub = () => {}
+    const check = async () => {
+      const user = await getCurrentUser()
+      if (user) {
+        setCurrentUser({ id: user.id, mobile: user.phone || user.mobile || '', name: user.name })
+        setUserWallet({
+          id: `wallet-${user.id}`,
+          userId: user.id,
+          tokens: user.tokens ?? 0,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
-        }
-        setUserWallet(mockWallet)
+        })
+      } else {
+        setCurrentUser(null)
+        setUserWallet(null)
       }
+      setTokenBundles(mockTokenBundles)
     }
-    
-    checkAuthStatus()
+    check()
+    unsub = onAuthChange(check)
+    return () => unsub()
   }, [])
 
   useEffect(() => {
@@ -478,18 +464,13 @@ export default function HomePage() {
 
   // Handle logout
   const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' })
-      if (response.ok) {
-        setCurrentUser(null)
-        setUserWallet(null)
-        setUnlockedContacts(new Set())
-        setShowProfileMenu(false)
-        toast.success('Logged out successfully')
-      }
-    } catch (error) {
-      toast.error('Failed to logout')
-    }
+    await authLogout()
+    setCurrentUser(null)
+    setUserWallet(null)
+    setUnlockedContacts(new Set())
+    setShowProfileMenu(false)
+    toast.success('Logged out successfully')
+    router.replace('/login')
   }
 
   // Notification handlers
@@ -579,10 +560,9 @@ export default function HomePage() {
     // In real app, this would trigger a new API call
   }
 
-  const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    // In real app, this would filter listings
-    toast.success(`Filtering by category`)
+  const handleCategoryClick = (categoryName: string) => {
+    // Navigate to category page
+    router.push(`/category/${encodeURIComponent(categoryName)}`)
   }
 
   const handleSaveListing = (listingId: string) => {
@@ -751,7 +731,9 @@ export default function HomePage() {
         seller_name: currentUser.name || 'User',
         seller_type: 'individual',
         views: 0,
-        description: listingForm.description
+        description: listingForm.description,
+        listing_type: 'free',
+        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       }
       
       // Add to listings
@@ -1432,7 +1414,7 @@ export default function HomePage() {
                       <button
                         onClick={() => {
                           setShowProfileMenu(false)
-                          toast.info('My listings coming soon')
+                          router.push('/listings')
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
@@ -1443,7 +1425,7 @@ export default function HomePage() {
                       <button
                         onClick={() => {
                           setShowProfileMenu(false)
-                          toast.info('Profile settings coming soon')
+                          router.push('/profile')
                         }}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
@@ -1467,7 +1449,7 @@ export default function HomePage() {
                 <Button 
                   variant="outline" 
                   size="icon"
-                  onClick={() => window.location.href = '/auth'}
+                  onClick={() => router.push('/login')}
                 >
                   <User className="w-5 h-5" />
                 </Button>
@@ -1504,9 +1486,9 @@ export default function HomePage() {
                     <SearchComponent />
                     <Button 
                       className="w-full"
-                      onClick={() => window.location.href = '/auth'}
+                      onClick={() => router.push('/login')}
                     >
-                      Login / Signup
+                      Login / Sign Up
                     </Button>
                   </div>
                 </SheetContent>
@@ -1530,9 +1512,9 @@ export default function HomePage() {
             {mockCategories.map((category) => (
               <button
                 key={category.id}
-                onClick={() => handleCategoryClick(category.id)}
+                onClick={() => handleCategoryClick(category.name)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors whitespace-nowrap flex-shrink-0 ${
-                  selectedCategory === category.id
+                  selectedCategory === category.name
                     ? 'bg-blue-50 border-blue-200 text-blue-600'
                     : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
                 }`}

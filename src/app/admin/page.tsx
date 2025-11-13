@@ -1,6 +1,9 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { requireAuth } from '@/lib/auth'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -49,6 +52,7 @@ interface Transaction {
 }
 
 export default function AdminPanel() {
+  const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [listings, setListings] = useState<Listing[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -58,6 +62,11 @@ export default function AdminPanel() {
     totalTokens: 0,
     totalRevenue: 0
   })
+
+  // Auth guard
+  useEffect(() => {
+    requireAuth((path) => router.replace(path))
+  }, [])
 
   // Mock data
   useEffect(() => {
