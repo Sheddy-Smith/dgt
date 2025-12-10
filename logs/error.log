@@ -1,0 +1,69 @@
+2025-12-10 09:27:47 [ERROR]: Email transporter verification failed: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7e29f2ecf6fsm17549349b3a.11 - gsmtp
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7e29f2ecf6fsm17549349b3a.11 - gsmtp
+    at SMTPConnection._formatError (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:809:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:1588:34)
+    at SMTPConnection.<anonymous> (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:556:26)
+    at SMTPConnection._processResponse (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:993:20)
+    at SMTPConnection._onData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:774:14)
+    at SMTPConnection._onSocketData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+2025-12-10 09:27:49 [ERROR]: Server startup error: Missing parameter name at index 7: /admin*; visit https://git.new/pathToRegexpError for info
+TypeError: Missing parameter name at index 7: /admin*; visit https://git.new/pathToRegexpError for info
+    at name (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\path-to-regexp\dist\index.js:96:19)
+    at parse (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\path-to-regexp\dist\index.js:113:68)
+    at pathToRegexp (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\path-to-regexp\dist\index.js:267:58)
+    at Object.match (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\path-to-regexp\dist\index.js:237:30)
+    at matcher (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\router\lib\layer.js:86:23)
+    at new Layer (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\router\lib\layer.js:93:62)
+    at Function.route (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\router\index.js:428:17)
+    at Function.route (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\express\lib\application.js:257:22)
+    at Function.all (C:\Users\malwa\web project\dgt-main\dgt-main\node_modules\express\lib\application.js:495:20)
+    at startServer (C:\Users\malwa\web project\dgt-main\dgt-main\unified-server.js:145:9)
+2025-12-10 09:28:12 [ERROR]: Email transporter verification failed: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-29dae4eec39sm165974795ad.44 - gsmtp
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-29dae4eec39sm165974795ad.44 - gsmtp
+    at SMTPConnection._formatError (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:809:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:1588:34)
+    at SMTPConnection.<anonymous> (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:556:26)
+    at SMTPConnection._processResponse (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:993:20)
+    at SMTPConnection._onData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:774:14)
+    at SMTPConnection._onSocketData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+2025-12-10 09:28:15 [ERROR]: ❌ Database connection failed: Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
+PrismaClientInitializationError: Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
+    at t (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\@prisma\client\runtime\library.js:112:2488)
+2025-12-10 09:29:27 [ERROR]: Email transporter verification failed: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7e29f2edf3dsm17512276b3a.6 - gsmtp
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7e29f2edf3dsm17512276b3a.6 - gsmtp
+    at SMTPConnection._formatError (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:809:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:1588:34)
+    at SMTPConnection.<anonymous> (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:556:26)
+    at SMTPConnection._processResponse (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:993:20)
+    at SMTPConnection._onData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:774:14)
+    at SMTPConnection._onSocketData (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:189:23)
+2025-12-10 09:29:29 [ERROR]: ❌ Database connection failed: Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
+PrismaClientInitializationError: Can't reach database server at `localhost:3306`
+
+Please make sure your database server is running at `localhost:3306`.
+    at t (C:\Users\malwa\web project\dgt-main\dgt-main\backend\node_modules\@prisma\client\runtime\library.js:112:2488)

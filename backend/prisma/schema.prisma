@@ -1,0 +1,643 @@
+// Prisma Schema for DGT Marketplace
+// MySQL Database with full marketplace ecosystem
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// USER MANAGEMENT
+// =====================================================
+
+model User {
+  id            String    @id @default(uuid())
+  phone         String    @unique
+  email         String?   @unique
+  name          String?
+  avatar        String?
+  role          UserRole  @default(USER)
+  status        UserStatus @default(ACTIVE)
+  
+  // Location
+  city          String?
+  state         String?
+  country       String    @default("India")
+  pincode       String?
+  
+  // Preferences
+  language      String    @default("en")
+  notificationEnabled Boolean @default(true)
+  emailVerified Boolean   @default(false)
+  phoneVerified Boolean   @default(true)
+  
+  // Security
+  passwordHash  String?
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+  deviceTokens  String?   @db.Text // JSON array of FCM tokens
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  
+  // Relations
+  kycProfile    KycProfile?
+  wallet        Wallet?
+  listings      Listing[]
+  payoutRequests PayoutRequest[]
+  reports       Report[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  
+  @@index([phone])
+  @@index([email])
+  @@index([status])
+  @@index([city])
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  POWER_SELLER
+  MODERATOR
+  FINANCE
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  SUSPENDED
+  DELETED
+}
+
+model KycProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Documents
+  panNumber       String?
+  panImage        String?
+  aadhaarNumber   String?   // Encrypted
+  aadhaarImage    String?
+  selfieImage     String?
+  addressProof    String?
+  
+  // Verification
+  provider        String?   // onfido, signzy, idfy
+  providerRefId   String?
+  status          KycStatus @default(PENDING)
+  verifiedAt      DateTime?
+  verifiedBy      String?
+  rejectionReason String?   @db.Text
+  
+  // Metadata
+  attempts        Int       @default(0)
+  lastAttemptAt   DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([status])
+  @@index([userId])
+  @@map("kyc_profiles")
+}
+
+enum KycStatus {
+  PENDING
+  UNDER_REVIEW
+  VERIFIED
+  REJECTED
+}
+
+// =====================================================
+// CATEGORIES & LISTINGS
+// =====================================================
+
+model Category {
+  id              String    @id @default(uuid())
+  name            String
+  slug            String    @unique
+  icon            String?
+  description     String?   @db.Text
+  parentId        String?
+  parent          Category? @relation("SubCategories", fields: [parentId], references: [id])
+  children        Category[] @relation("SubCategories")
+  
+  // Settings
+  attributes      String?   @db.Text // JSON schema for dynamic fields
+  autoApprove     Boolean   @default(false)
+  defaultExpiry   Int       @default(30) // days
+  
+  // Stats
+  listingsCount   Int       @default(0)
+  
+  status          String    @default("active")
+  order           Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  listings        Listing[]
+  
+  @@index([slug])
+  @@index([parentId])
+  @@index([status])
+  @@map("categories")
+}
+
+model Listing {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  
+  // Content
+  title           String
+  description     String    @db.Text
+  price           Decimal   @db.Decimal(10, 2)
+  images          String    @db.Text // JSON array of image URLs
+  
+  // Location
+  city            String
+  state           String
+  pincode         String?
+  address         String?   @db.Text
+  
+  // Attributes (dynamic based on category)
+  attributes      String?   @db.Text // JSON object
+  
+  // Status & Lifecycle
+  status          ListingStatus @default(PENDING)
+  views           Int       @default(0)
+  contactViews    Int       @default(0)
+  
+  // Boost & Premium
+  boosted         Boolean   @default(false)
+  boostPlanId     String?
+  boostPlan       BoostPlan? @relation(fields: [boostPlanId], references: [id])
+  boostedAt       DateTime?
+  boostExpiresAt  DateTime?
+  
+  featured        Boolean   @default(false)
+  featuredUntil   DateTime?
+  
+  // Expiry
+  expiresAt       DateTime
+  autoRenew       Boolean   @default(false)
+  renewCount      Int       @default(0)
+  
+  // Moderation
+  approvedAt      DateTime?
+  approvedBy      String?
+  rejectedAt      DateTime?
+  rejectionReason String?   @db.Text
+  
+  // Timestamps
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  
+  // Relations
+  transactions    WalletTransaction[]
+  reports         Report[]
+  
+  @@index([userId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([city])
+  @@index([expiresAt])
+  @@index([boosted])
+  @@index([createdAt])
+  @@map("listings")
+}
+
+enum ListingStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  EXPIRED
+  SOLD
+  REJECTED
+  DELETED
+}
+
+model BoostPlan {
+  id              String    @id @default(uuid())
+  name            String
+  description     String?   @db.Text
+  
+  // Pricing
+  price           Decimal   @db.Decimal(10, 2)
+  duration        Int       // days
+  
+  // Features
+  features        String    @db.Text // JSON array
+  topPlacement    Boolean   @default(false)
+  highlightBorder Boolean   @default(false)
+  socialShare     Boolean   @default(false)
+  
+  // Settings
+  status          String    @default("active")
+  popular         Boolean   @default(false)
+  order           Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  listings        Listing[]
+  transactions    WalletTransaction[]
+  
+  @@index([status])
+  @@map("boost_plans")
+}
+
+// =====================================================
+// WALLET & PAYMENTS
+// =====================================================
+
+model Wallet {
+  id              String    @id @default(uuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  balance         Decimal   @db.Decimal(10, 2) @default(0.00)
+  holdBalance     Decimal   @db.Decimal(10, 2) @default(0.00)
+  
+  // Lifetime stats
+  totalCredits    Decimal   @db.Decimal(10, 2) @default(0.00)
+  totalDebits     Decimal   @db.Decimal(10, 2) @default(0.00)
+  totalPayouts    Decimal   @db.Decimal(10, 2) @default(0.00)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  transactions    WalletTransaction[]
+  payoutRequests  PayoutRequest[]
+  
+  @@index([userId])
+  @@map("wallets")
+}
+
+model WalletTransaction {
+  id              String    @id @default(uuid())
+  walletId        String
+  wallet          Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  
+  // Transaction details
+  type            TransactionType
+  amount          Decimal   @db.Decimal(10, 2)
+  balanceBefore   Decimal   @db.Decimal(10, 2)
+  balanceAfter    Decimal   @db.Decimal(10, 2)
+  
+  // References
+  listingId       String?
+  listing         Listing?  @relation(fields: [listingId], references: [id])
+  boostPlanId     String?
+  boostPlan       BoostPlan? @relation(fields: [boostPlanId], references: [id])
+  payoutRequestId String?
+  payoutRequest   PayoutRequest? @relation(fields: [payoutRequestId], references: [id])
+  
+  // Payment gateway
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  razorpayRefundId  String?
+  paymentMethod     String?
+  paymentStatus     String?
+  
+  // Metadata
+  description     String?   @db.Text
+  metadata        String?   @db.Text // JSON
+  
+  status          String    @default("completed")
+  createdAt       DateTime  @default(now())
+  
+  @@index([walletId])
+  @@index([type])
+  @@index([listingId])
+  @@index([razorpayOrderId])
+  @@index([createdAt])
+  @@map("wallet_transactions")
+}
+
+enum TransactionType {
+  CREDIT_TOPUP
+  CREDIT_REFUND
+  CREDIT_BONUS
+  DEBIT_BOOST
+  DEBIT_PAYOUT
+  DEBIT_FEE
+  HOLD
+  RELEASE
+}
+
+model PayoutRequest {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId        String
+  wallet          Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  
+  amount          Decimal   @db.Decimal(10, 2)
+  fee             Decimal   @db.Decimal(10, 2) @default(0.00)
+  netAmount       Decimal   @db.Decimal(10, 2)
+  
+  // Bank details (stored as JSON for security)
+  bankDetails     String?   @db.Text // JSON encrypted
+  
+  method          String    @default("bank_transfer") // bank_transfer, upi
+  
+  // Status
+  status          PayoutStatus @default(PENDING)
+  
+  // Processing
+  razorpayPayoutId     String?
+  razorpayFundAccountId String?
+  razorpayStatus       String?
+  processedAt          DateTime?
+  processedBy          String?
+  failureReason        String?   @db.Text
+  rejectionReason      String?   @db.Text
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  transactions    WalletTransaction[]
+  
+  @@index([userId])
+  @@index([walletId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payout_requests")
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REJECTED
+  CANCELLED
+}
+
+// =====================================================
+// ADS & BANNERS
+// =====================================================
+
+model Banner {
+  id              String    @id @default(uuid())
+  title           String
+  image           String
+  imageUrl        String?
+  
+  // Placement
+  type            BannerType
+  placement       String    // home_top, home_middle, category_top
+  
+  // Target
+  targetType      String?   // url, category, listing
+  targetValue     String?
+  
+  // Schedule
+  startDate       DateTime?
+  endDate         DateTime?
+  
+  // Stats
+  impressions     Int       @default(0)
+  clicks          Int       @default(0)
+  
+  // Settings
+  status          String    @default("active")
+  priority        Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String?
+  
+  @@index([type])
+  @@index([status])
+  @@index([startDate, endDate])
+  @@map("banners")
+}
+
+enum BannerType {
+  HOME_BANNER
+  CATEGORY_BANNER
+  PROMOTION
+  ANNOUNCEMENT
+}
+
+// =====================================================
+// NOTIFICATIONS & ANNOUNCEMENTS
+// =====================================================
+
+model Notification {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Content
+  title           String
+  body            String    @db.Text
+  icon            String?
+  image           String?
+  
+  // Action
+  actionType      String?   // navigate, url
+  actionValue     String?
+  
+  // Delivery
+  channel         String    @default("in_app") // in_app, push, email, sms
+  
+  // Status
+  status          String    @default("sent")
+  readAt          DateTime?
+  clickedAt       DateTime?
+  
+  // Metadata
+  metadata        String?   @db.Text // JSON
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model Announcement {
+  id              String    @id @default(uuid())
+  title           String
+  message         String    @db.Text
+  type            String    @default("info") // info, warning, alert, promotion
+  
+  // Target
+  targetAudience  String    @default("all") // all, city, segment
+  targetValue     String?
+  
+  // Display
+  showInApp       Boolean   @default(true)
+  showAsBanner    Boolean   @default(false)
+  priority        String    @default("normal")
+  
+  // Schedule
+  startDate       DateTime?
+  endDate         DateTime?
+  
+  status          String    @default("active")
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String?
+  
+  @@index([status])
+  @@index([startDate, endDate])
+  @@map("announcements")
+}
+
+// =====================================================
+// REPORTS & MODERATION
+// =====================================================
+
+model Report {
+  id              String    @id @default(uuid())
+  reporterId      String
+  reporter        User      @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  
+  // Target
+  listingId       String?
+  listing         Listing?  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  // Report details
+  reason          String
+  description     String?   @db.Text
+  evidence        String?   @db.Text // JSON array of image URLs
+  
+  // Status
+  status          String    @default("pending") // pending, reviewed, actioned, dismissed
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  reviewNotes     String?   @db.Text
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([listingId])
+  @@index([reporterId])
+  @@index([status])
+  @@map("reports")
+}
+
+// =====================================================
+// SETTINGS & CONFIGURATION
+// =====================================================
+
+model Setting {
+  id              String    @id @default(uuid())
+  key             String    @unique
+  value           String    @db.Text
+  type            String    @default("string") // string, number, boolean, json
+  category        String?   // general, payment, notification, etc.
+  description     String?   @db.Text
+  
+  updatedAt       DateTime  @updatedAt
+  updatedBy       String?
+  
+  @@index([key])
+  @@index([category])
+  @@map("settings")
+}
+
+model FeatureFlag {
+  id              String    @id @default(uuid())
+  key             String    @unique
+  description     String?   @db.Text
+  
+  enabled         Boolean   @default(false)
+  rolloutPercent  Int       @default(0)
+  
+  // Targeting
+  targetAudience  String    @default("all") // all, region, segment, role
+  targetValue     String?
+  
+  // Metadata
+  metadata        String?   @db.Text // JSON
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String?
+  
+  @@index([key])
+  @@map("feature_flags")
+}
+
+// =====================================================
+// AUDIT & LOGS
+// =====================================================
+
+model AuditLog {
+  id              String    @id @default(uuid())
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Action
+  action          String
+  resource        String
+  resourceId      String?
+  
+  // Details
+  changes         String?   @db.Text // JSON before/after
+  ip              String?
+  userAgent       String?   @db.Text
+  
+  status          String    @default("success") // success, failed
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// =====================================================
+// ANALYTICS (Optional - can be moved to separate service)
+// =====================================================
+
+model AnalyticsEvent {
+  id              String    @id @default(uuid())
+  eventType       String
+  userId          String?
+  sessionId       String?
+  
+  // Event data
+  properties      String?   @db.Text // JSON
+  
+  // Context
+  platform        String?   // web, android, ios
+  city            String?
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([eventType])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("analytics_events")
+}
